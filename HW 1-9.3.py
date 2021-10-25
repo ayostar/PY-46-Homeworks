@@ -6,7 +6,6 @@ import requests as req
 
 class Stackoverflow:
 
-
     def get_questions_wth_tag(self, tag, days):
         url = "https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&site=stackoverflow"
         dt_temp = datetime.now()
