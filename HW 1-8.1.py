@@ -1,7 +1,7 @@
 import os
 from pprint import pprint
 
-file_path = os.path.join(os.getcwd(), 'recipes.txt')
+file_path = os.path.join(os.getcwd(), 'PycharmProjects/pythonProject/files/recipes.txt')
 
 with open(file_path, encoding = 'utf-8') as file:
     cook_book = {}
