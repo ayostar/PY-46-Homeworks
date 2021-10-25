@@ -1,15 +1,31 @@
 from pprint import pprint
-import requests
+from datetime import datetime
+from datetime import timedelta
+import requests as req
 
 
-class Reddit:
+class Stackoverflow:
 
-    def get_popular_videos(self):
-        url = "https://www.reddit.com/r/gifs/top.json?t=day"
-        response = requests.get(url, headers={'User-agent': 'netology'})
-        pprint(response)
-        return response.json()
+
+    def get_questions_wth_tag(self, tag, days):
+        url = "https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&site=stackoverflow"
+        dt_temp = datetime.now()
+        days = timedelta(days)
+        from_date_temp = dt_temp - days
+        from_date = from_date_temp.strftime('%Y-%m-%d')
+        to_date = dt_temp.strftime('%Y-%m-%d')
+        headers = {'Accept': 'application/json'}
+        # params = {'tagged': tag, 'fromdate': from_date}
+        params = {'fromdate': from_date, 'todate': to_date, 'tagged': tag}
+        response = req.get(url=url, headers=headers, params=params)
+        response_dict = dict(response.json())
+        list_of_questions = response_dict.get('items')
+        # for el in list_of_questions:
+        #     print(el.get('tags'))
+        number_of_questions = len(list_of_questions)
+        return f'Количество запросов с тэгом {tag} составляет: {number_of_questions}'
+
 
 if __name__ == '__main__':
-    reddit = Reddit()
-    pprint(reddit.get_popular_videos())
+    stack_inquiry = Stackoverflow()
+    pprint(stack_inquiry.get_questions_wth_tag('Python', 2))
