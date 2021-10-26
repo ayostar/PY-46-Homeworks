@@ -32,7 +32,7 @@ class Stackoverflow:
 
 if __name__ == '__main__':
     stack_inquiry = Stackoverflow()
-    stack_inquiry.print_questions_wth_tag('Python', 1)
+    stack_inquiry.print_questions_wth_tag('Python', 2)
 
 
 #     def get_questions_wth_tag(self, tag, days):
