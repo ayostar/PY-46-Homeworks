@@ -1,7 +1,7 @@
 import os
 from pprint import pprint
 
-file_path = os.path.join(os.getcwd(), 'PycharmProjects/pythonProject/files/recipes.txt')
+file_path = os.path.join(os.getcwd(), 'files/recipes.txt')
 
 with open(file_path, encoding = 'utf-8') as file:
 
@@ -11,7 +11,6 @@ with open(file_path, encoding = 'utf-8') as file:
 
         for book in file:
             dish_name = book.strip()
-
             if dish_name in same_dishes_count_dict.keys():
                 dish_name_count = same_dishes_count_dict.get(dish_name)
                 amount_of_ingridients = int(file.readline().strip())
