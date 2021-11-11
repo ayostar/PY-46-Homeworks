@@ -4,6 +4,8 @@ import requests
 import json
 from datetime import datetime
 import time
+
+from progress.bar import IncrementalBar
 from tqdm import tqdm
 
 
@@ -26,11 +28,10 @@ class VKUser:
         req = requests.get(get_photos_url, params = {**self.params, **get_photos_params}).json()
         items_list = req['response']['items']
         photo_dict = {}
-        photos_json_dict = {}
         photos_json_list = []
         photo_likes_list = []
 
-        for photo in items_list:
+        for photo in tqdm(items_list, desc = 'Photos receiving from VK: ', colour = 'BLUE'):
             photo_id = photo.get('id')
             photo_sizes = photo.get('sizes')
             photo_date = photo.get('date')
@@ -47,17 +48,16 @@ class VKUser:
                 photo_likes_list.append(photo_likes)
 
             photo_likes_json = f'{photo_likes}.jpg'
-            photos_json_dict['filename'] = photo_likes_json
-            photos_json_dict['size'] = type_size_photo
+            photos_json_dict = {'filename': photo_likes_json, 'size': type_size_photo}
             photos_json_list.append(photos_json_dict)
+
+            bar = IncrementalBar(max = len(items_list))
+            bar.next()
+            time.sleep(0.5)
+            bar.finish()
 
         with open('photos_json.json', 'w') as outfile:
             json.dump(photos_json_list, outfile)
-
-        progress_bar = tqdm(photo_dict.keys())
-        for upload in progress_bar:
-            time.sleep(0.5)
-            progress_bar.set_description("Searching for photo_id %s" % upload)
 
         return photo_dict
 
@@ -75,16 +75,16 @@ class YaUploader:
     def upload_url(self, directory, uploading_urls_files):
         upload_url = self.url + 'upload'
         uploader.make_new_directory(directory)
-        for values in uploading_urls_files.values():
+        for values in tqdm(uploading_urls_files.values(), desc = 'Photos uploading to YD: ', colour = 'GREEN'):
             uploading_file_name = values[0]
             uploading_url_file = values[1]
             params = {"path": f'{directory}/{uploading_file_name}', 'url': uploading_url_file, "overwrite": "true"}
             response = requests.post(upload_url, params = params, headers = self.headers)
 
-        progress_bar = tqdm(uploading_urls_files.keys())
-        for upload in progress_bar:
+            bar = IncrementalBar(max = len(uploading_urls_files.values()))
+            bar.next()
             time.sleep(0.5)
-            progress_bar.set_description("Uploading photo_id %s" % upload)
+            bar.finish()
 
 
 if __name__ == '__main__':
